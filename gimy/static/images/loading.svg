@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+  <circle cx="12" cy="12" r="10" fill="#f0f0f0"/>
+  <circle cx="12" cy="12" r="8" fill="#e0e0e0"/>
+  <circle cx="12" cy="12" r="6" fill="#d0d0d0"/>
+  <text x="12" y="16" font-family="Arial, sans-serif" font-size="8" text-anchor="middle" fill="#999">加载中</text>
+</svg>

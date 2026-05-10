@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>播放页 - GiMy.tv</title>
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <nav class="nav">
+                <div class="logo">GiMy.tv</div>
+                <ul class="nav-menu">
+                    <li><a href="preview.html">首页</a></li>
+                    <li><a href="#">电影</a></li>
+                    <li><a href="#">电视剧</a></li>
+                </ul>
+                <div class="nav-right">
+                    <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+                    <a href="preview-login.html">登录</a>
+                </div>
+            </nav>
+        </header>
+
+        <main class="main">
+            <div class="play-page">
+                <div class="player-section">
+                    <div class="player">
+                        <video controls>
+                            <source src="static/videos/sample.mp4" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="episode-list">
+                        <h3>选集</h3>
+                        <ul>
+                            <li><a href="#">第1集</a></li>
+                            <li><a href="#">第2集</a></li>
+                            <!-- 更多集数 -->
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="comments-section">
+                    <h2>评论区</h2>
+                    <div class="comment-form">
+                        <textarea placeholder="写下你的评论..."></textarea>
+                        <button class="btn">发表评论</button>
+                    </div>
+                    <div class="comments-list">
+                        <div class="comment">
+                            <div class="comment-header">
+                                <span class="username">用户1</span>
+                                <span class="time">2024-01-01</span>
+                            </div>
+                            <p>播放很流畅！</p>
+                            <div class="comment-actions">
+                                <button>点赞</button>
+                                <button>回复</button>
+                            </div>
+                            <div class="replies">
+                                <div class="reply">
+                                    <span class="username">用户2</span>
+                                    <p>是的，画质很好。</p>
+                                </div>
+                                <div class="reply">
+                                    <span class="username">用户3</span>
+                                    <p>楼上说得对。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024 GiMy.tv. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="static/js/main.js"></script>
+    <script src="static/js/user.js"></script>
+</body>
+</html>
