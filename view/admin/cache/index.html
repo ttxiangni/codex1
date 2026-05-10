@@ -1,0 +1,75 @@
+{include file="admin/layout/header" /}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">缓存管理</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>缓存配置</h5>
+                                </div>
+                                <div class="card-body">
+                                    <table class="table table-sm">
+                                        <tbody>
+                                            {foreach $cacheConfigs as $config}
+                                            <tr>
+                                                <td>{$config.page_type}</td>
+                                                <td>{$config.ttl}秒</td>
+                                                <td>
+                                                    {if $config.status == 1}
+                                                        <span class="badge badge-success">启用</span>
+                                                    {else}
+                                                        <span class="badge badge-secondary">禁用</span>
+                                                    {/if}
+                                                </td>
+                                            </tr>
+                                            {/foreach}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>缓存操作</h5>
+                                </div>
+                                <div class="card-body">
+                                    <button onclick="clearCache()" class="btn btn-danger btn-block">
+                                        <i class="fas fa-trash"></i> 清除所有缓存
+                                    </button>
+                                    <hr>
+                                    <p class="text-muted">清除缓存将重新生成页面，提高访问速度但会暂时降低性能。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function clearCache() {
+    if (confirm('确定要清除所有缓存吗？')) {
+        $.post('{:url("admin/cache/clear")}', function(data) {
+            if (data.code == 1) {
+                alert(data.msg);
+                location.reload();
+            } else {
+                alert(data.msg);
+            }
+        });
+    }
+}
+</script>
+
+{include file="admin/layout/footer" /}

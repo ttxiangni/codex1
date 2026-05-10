@@ -1,0 +1,16 @@
+<!-- 空状态组件 -->
+<div class="text-center py-5">
+    <i class="fas fa-{$icon|default='film'} fa-3x text-muted mb-3"></i>
+    <h4 class="text-muted">{$title|default='暂无内容'}</h4>
+    <p class="text-muted">{$message|default='我们正在努力添加更多精彩内容'}</p>
+    {if $show_search}
+    <form class="d-inline-flex mt-3" action="/search" method="get">
+        <input type="text" class="form-control me-2" name="keyword" placeholder="重新搜索..." required>
+        <button class="btn btn-primary" type="submit">搜索</button>
+    </form>
+    <br>
+    {/if}
+    {if $show_home_link}
+    <a href="/" class="btn btn-outline-primary mt-3">返回首页</a>
+    {/if}
+</div>

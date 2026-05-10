@@ -1,0 +1,9 @@
+<!-- 搜索表单组件 -->
+<form action="/search" method="get" class="{$form_class|default='d-flex'}">
+    <input type="text" class="form-control {$input_class}" name="keyword" placeholder="{$placeholder|default='输入电影、电视剧、演员名称...'}" value="{$keyword|default=''}" required>
+    {if $show_button}
+    <button class="btn btn-primary {$button_class}" type="submit">
+        <i class="fas fa-search me-2"></i>{$button_text|default='搜索'}
+    </button>
+    {/if}
+</form>

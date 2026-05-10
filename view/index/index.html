@@ -1,0 +1,102 @@
+{include file="layout/header" title="首页" current_page="index" /}
+
+    <!-- 搜索区域 -->
+    <section class="search-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <h2 class="text-center mb-4">发现精彩影视内容</h2>
+                    {include file="common/search_form" form_class="input-group input-group-lg" input_class="" show_button=true button_class="" button_text="搜索" /}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 热门视频轮播 -->
+    <section class="py-5">
+        <div class="container">
+            <h3 class="mb-4"><i class="fas fa-fire text-danger me-2"></i>热门推荐</h3>
+            <div id="hotVideosCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-inner">
+                    {foreach $videos as $key => $video}
+                    {if $key < 5}
+                    <div class="carousel-item {if $key == 0}active{/if}">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <img src="{$video.image}" class="d-block w-100" alt="{$video.title}" style="height: 400px; object-fit: cover;">
+                            </div>
+                            <div class="col-md-4 d-flex align-items-center">
+                                <div>
+                                    <h4><a href="{videoUrl video=$video /}" class="text-decoration-none text-dark">{$video.title}</a></h4>
+                                    <p class="text-muted">{$video.content|substr=0,100}...</p>
+                                    <a href="{videoUrl video=$video /}" class="btn btn-primary">
+                                        <i class="fas fa-play me-2"></i>立即观看
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/if}
+                    {/foreach}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#hotVideosCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#hotVideosCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 最新视频 -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h3 class="mb-4"><i class="fas fa-clock text-primary me-2"></i>最新视频</h3>
+            <div class="row">
+                {foreach $videos as $video}
+                <div class="col-lg-2 col-md-3 col-sm-6 mb-4">
+                    <div class="card video-card h-100">
+                        <img src="{$video.image}" class="card-img-top" alt="{$video.title}" style="height: 200px; object-fit: cover;">
+                        <div class="card-body d-flex flex-column">
+                            <h6 class="card-title">
+                                <a href="{videoUrl video=$video /}" class="text-decoration-none text-dark" title="{$video.title}">
+                                    {$video.title|substr=0,15}{if strlen($video.title) > 15}...{/if}
+                                </a>
+                            </h6>
+                            <p class="card-text small text-muted flex-grow-1">{$video.content|substr=0,30}...</p>
+                            <small class="text-muted">{$video.create_time|date='Y-m-d'}</small>
+                        </div>
+                    </div>
+                </div>
+                {/foreach}
+            </div>
+
+            <!-- 分页 -->
+            <nav aria-label="视频分页" class="mt-4">
+                {$videos->render()}
+            </nav>
+        </div>
+    </section>
+
+    <!-- 分类导航 -->
+    <section class="category-nav py-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <h5 class="mb-3">按分类浏览</h5>
+                    <div class="d-flex flex-wrap">
+                        {foreach $categories as $category}
+                        <a href="{categoryUrl category=$category /}" class="btn btn-outline-primary me-2 mb-2">
+                            <i class="fas fa-tag me-1"></i>{$category.name}
+                        </a>
+                        {/foreach}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{include file="layout/footer" /}

@@ -1,0 +1,91 @@
+{include file="admin/layout/header" /}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">编辑SEO配置</h3>
+                </div>
+                <div class="card-body">
+                    <form id="seoForm" method="post" action="{:url('admin/seo/edit', ['id' => $seo.id])}">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="page_type">页面类型</label>
+                                    <select class="form-control" id="page_type" name="page_type" required>
+                                        <option value="">请选择页面类型</option>
+                                        <option value="index" {if $seo.page_type == 'index'}selected{/if}>首页</option>
+                                        <option value="category" {if $seo.page_type == 'category'}selected{/if}>分类页</option>
+                                        <option value="video" {if $seo.page_type == 'video'}selected{/if}>视频页</option>
+                                        <option value="article" {if $seo.page_type == 'article'}selected{/if}>文章页</option>
+                                        <option value="actor" {if $seo.page_type == 'actor'}selected{/if}>演员页</option>
+                                        <option value="episode" {if $seo.page_type == 'episode'}selected{/if}>分集页</option>
+                                        <option value="search" {if $seo.page_type == 'search'}selected{/if}>搜索页</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="page_key">页面标识</label>
+                                    <input type="text" class="form-control" id="page_key" name="page_key" value="{$seo.page_key}" placeholder="例如：category_1 或 article_123">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="title">标题</label>
+                                    <input type="text" class="form-control" id="title" name="title" value="{$seo.title}" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="keywords">关键词</label>
+                                    <input type="text" class="form-control" id="keywords" name="keywords" value="{$seo.keywords}" placeholder="用逗号分隔">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="description">描述</label>
+                                    <textarea class="form-control" id="description" name="description" rows="3">{$seo.description}</textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="author">作者</label>
+                                    <input type="text" class="form-control" id="author" name="author" value="{$seo.author}">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="image">图片URL</label>
+                                    <input type="text" class="form-control" id="image" name="image" value="{$seo.image}" placeholder="用于社交分享的图片">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="url">页面URL</label>
+                                    <input type="text" class="form-control" id="url" name="url" value="{$seo.url}" placeholder="完整的页面URL">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">保存</button>
+                        <a href="{:url('admin/seo')}" class="btn btn-secondary">返回</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$('#seoForm').submit(function(e) {
+    e.preventDefault();
+    
+    $.post($(this).attr('action'), $(this).serialize(), function(data) {
+        if (data.code == 1) {
+            alert(data.msg);
+            location.href = '{:url("admin/seo")}';
+        } else {
+            alert(data.msg);
+        }
+    });
+});
+</script>
+
+{include file="admin/layout/footer" /}

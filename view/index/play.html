@@ -1,0 +1,191 @@
+{include file="layout/header" title="播放 - {$video.title}" current_category=$video.category_id extra_js='<script>
+        // 自动添加观看历史
+        document.addEventListener("DOMContentLoaded", function() {
+            // 添加观看历史
+            const formData = new FormData();
+            formData.append("user_id", 1); // 这里应该从用户会话获取
+            formData.append("video_id", "{$video.id}");
+
+            fetch("/api/addWatchHistory", {
+                method: "POST",
+                body: formData
+            }).catch(error => {
+                console.error("添加观看历史失败:", error);
+            });
+        });
+
+        // 分享视频
+        function shareVideo() {
+            if (navigator.share) {
+                navigator.share({
+                    title: "{$video.title}",
+                    text: "快来看这个精彩的视频：{$video.title}",
+                    url: window.location.href
+                });
+            } else {
+                // 复制链接到剪贴板
+                navigator.clipboard.writeText(window.location.href).then(() => {
+                    alert("链接已复制到剪贴板");
+                });
+            }
+        }
+
+        // 收藏视频
+        function toggleFavorite() {
+            const formData = new FormData();
+            formData.append("user_id", 1); // 这里应该从用户会话获取
+            formData.append("video_id", "{$video.id}");
+
+            fetch("/api/toggleFavorite", {
+                method: "POST",
+                body: formData
+            }).then(response => response.json()).then(data => {
+                if (data.code === 0) {
+                    alert(data.msg);
+                    const favoriteBtn = document.querySelector(".favorite-btn");
+                    if (data.action === "favorite") {
+                        favoriteBtn.innerHTML = "<i class=\"fas fa-heart text-danger me-2\"></i>已收藏";
+                        favoriteBtn.classList.add("btn-danger");
+                        favoriteBtn.classList.remove("btn-outline-danger");
+                    } else {
+                        favoriteBtn.innerHTML = "<i class=\"fas fa-heart me-2\"></i>收藏";
+                        favoriteBtn.classList.remove("btn-danger");
+                        favoriteBtn.classList.add("btn-outline-danger");
+                    }
+                } else {
+                    alert(data.msg || "操作失败，请重试");
+                }
+            }).catch(error => {
+                console.error("Error:", error);
+                alert("网络错误，请重试");
+            });
+        }
+
+        // 检查收藏状态
+        function checkFavoriteStatus() {
+            fetch(`/api/checkFavorite?user_id=1&video_id={$video.id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 0 && data.data) {
+                        const favoriteBtn = document.querySelector(".favorite-btn");
+                        favoriteBtn.innerHTML = "<i class=\"fas fa-heart text-danger me-2\"></i>已收藏";
+                        favoriteBtn.classList.add("btn-danger");
+                        favoriteBtn.classList.remove("btn-outline-danger");
+                    }
+                });
+        }
+
+        // 页面加载完成后检查收藏状态
+        document.addEventListener("DOMContentLoaded", checkFavoriteStatus);
+    </script>' /}
+
+    <div class="container-fluid px-0">
+        <!-- 播放器区域 -->
+        <div class="player-container position-relative" style="background: #000; min-height: 70vh;">
+            <video id="mainPlayer" controls autoplay class="w-100" poster="{$video.image}" style="max-height: 70vh; object-fit: contain;">
+                <source src="{$video.url}" type="video/mp4">
+                您的浏览器不支持 video 标签。
+            </video>
+
+            <!-- 播放器控制栏覆盖层 -->
+            <div class="player-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" style="background: rgba(0,0,0,0.3); pointer-events: none;">
+                <div class="text-center text-white">
+                    <h2 class="display-4 fw-bold mb-3">{$video.title}</h2>
+                    <div class="d-flex justify-content-center gap-3">
+                        <button class="btn btn-primary btn-lg favorite-btn" onclick="toggleFavorite()">
+                            <i class="fas fa-heart me-2"></i>收藏
+                        </button>
+                        <button class="btn btn-outline-light btn-lg" onclick="shareVideo()">
+                            <i class="fas fa-share me-2"></i>分享
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 视频信息栏 -->
+        <div class="bg-white border-bottom">
+            <div class="container py-3">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h3 class="mb-2">{$video.title}</h3>
+                        <div class="d-flex align-items-center text-muted mb-2">
+                            <span class="badge bg-primary me-2">{$video.category.name}</span>
+                            <i class="fas fa-calendar me-1"></i>
+                            <small>{$video.create_time|date='Y-m-d H:i'}</small>
+                            <i class="fas fa-eye ms-3 me-1"></i>
+                            <small>播放中</small>
+                        </div>
+                        <p class="mb-0 text-muted">{$video.content}</p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <div class="d-flex justify-content-end gap-2">
+                            <button class="btn btn-outline-primary" onclick="window.open('/video/{$video.id}', '_blank')">
+                                <i class="fas fa-info-circle me-1"></i>详情
+                            </button>
+                            <button class="btn btn-outline-secondary" onclick="history.back()">
+                                <i class="fas fa-arrow-left me-1"></i>返回
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 相关视频推荐 -->
+        <div class="container py-4">
+            <h4 class="mb-4"><i class="fas fa-play-circle text-primary me-2"></i>相关推荐</h4>
+            <div class="row">
+                {foreach $relatedVideos as $related}
+                <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-3">
+                    <div class="card video-card h-100">
+                        <div class="position-relative">
+                            <img src="{$related.image}" class="card-img-top" alt="{$related.title}" style="height: 120px; object-fit: cover;">
+                            <a href="/play/{$related.id}" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center text-white text-decoration-none" style="background: rgba(0,0,0,0.7); opacity: 0; transition: opacity 0.3s;">
+                                <i class="fas fa-play fa-2x"></i>
+                            </a>
+                        </div>
+                        <div class="card-body p-2">
+                            <h6 class="card-title small mb-1">
+                                <a href="/play/{$related.id}" class="text-decoration-none text-dark">
+                                    {$related.title|substr=0,15}{if strlen($related.title) > 15}...{/if}
+                                </a>
+                            </h6>
+                            <small class="text-muted">{$related.create_time|date='Y-m-d'}</small>
+                        </div>
+                    </div>
+                </div>
+                {/foreach}
+            </div>
+        </div>
+    </div>
+
+<style>
+    .player-container video:focus {
+        outline: none;
+    }
+
+    .player-overlay {
+        opacity: 1;
+        transition: opacity 0.3s;
+    }
+
+    .player-container:hover .player-overlay {
+        opacity: 0;
+    }
+
+    .video-card:hover .card-img-top {
+        transform: scale(1.05);
+        transition: transform 0.3s;
+    }
+
+    .video-card .card-img-top {
+        transition: transform 0.3s;
+    }
+
+    .video-card:hover a[href] {
+        opacity: 1 !important;
+    }
+</style>
+
+{include file="layout/footer" /}

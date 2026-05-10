@@ -1,0 +1,106 @@
+{include file="admin/layout/header" /}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">添加演员</h3>
+                </div>
+                <div class="card-body">
+                    <form id="actorForm" method="post" action="{:url('admin/actor/add')}">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="name">姓名</label>
+                                    <input type="text" class="form-control" id="name" name="name" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="english_name">英文名</label>
+                                    <input type="text" class="form-control" id="english_name" name="english_name">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="gender">性别</label>
+                                    <select class="form-control" id="gender" name="gender">
+                                        <option value="男">男</option>
+                                        <option value="女">女</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="birthday">生日</label>
+                                    <input type="date" class="form-control" id="birthday" name="birthday">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="height">身高(cm)</label>
+                                    <input type="number" class="form-control" id="height" name="height">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="weight">体重(kg)</label>
+                                    <input type="number" class="form-control" id="weight" name="weight">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="constellation">星座</label>
+                                    <input type="text" class="form-control" id="constellation" name="constellation">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="blood_type">血型</label>
+                                    <select class="form-control" id="blood_type" name="blood_type">
+                                        <option value="">未知</option>
+                                        <option value="A">A型</option>
+                                        <option value="B">B型</option>
+                                        <option value="AB">AB型</option>
+                                        <option value="O">O型</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="region">地区</label>
+                                    <input type="text" class="form-control" id="region" name="region">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="avatar">头像URL</label>
+                                    <input type="text" class="form-control" id="avatar" name="avatar">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="biography">简介</label>
+                                    <textarea class="form-control" id="biography" name="biography" rows="5"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">保存</button>
+                        <a href="{:url('admin/actor')}" class="btn btn-secondary">返回</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$('#actorForm').submit(function(e) {
+    e.preventDefault();
+    
+    $.post($(this).attr('action'), $(this).serialize(), function(data) {
+        if (data.code == 1) {
+            alert(data.msg);
+            location.href = '{:url("admin/actor")}';
+        } else {
+            alert(data.msg);
+        }
+    });
+});
+</script>
+
+{include file="admin/layout/footer" /}

@@ -1,0 +1,121 @@
+{include file="layout/header" title="用户中心" current_page="user" /}
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-3">
+                <!-- 用户信息卡片 -->
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        <img src="https://via.placeholder.com/80x80?text=U" alt="用户头像" class="rounded-circle mb-3" style="width: 80px; height: 80px;">
+                        <h5>用户名</h5>
+                        <p class="text-muted small">普通会员</p>
+                    </div>
+                </div>
+
+                <!-- 导航菜单 -->
+                <div class="list-group">
+                    <a href="/user" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-tachometer-alt me-2"></i>用户中心
+                    </a>
+                    <a href="/user/favorites" class="list-group-item list-group-item-action">
+                        <i class="fas fa-heart me-2"></i>我的收藏
+                        {if $unreadMessageCount > 0}<span class="badge bg-danger ms-2">{$favoriteCount}</span>{/if}
+                    </a>
+                    <a href="/user/history" class="list-group-item list-group-item-action">
+                        <i class="fas fa-history me-2"></i>观看历史
+                        {if $historyCount > 0}<span class="badge bg-primary ms-2">{$historyCount}</span>{/if}
+                    </a>
+                    <a href="/user/messages" class="list-group-item list-group-item-action">
+                        <i class="fas fa-envelope me-2"></i>站内信
+                        {if $unreadMessageCount > 0}<span class="badge bg-danger ms-2">{$unreadMessageCount}</span>{/if}
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <!-- 统计卡片 -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-heart fa-2x text-danger mb-2"></i>
+                                <h4 class="mb-0">{$favoriteCount}</h4>
+                                <small class="text-muted">收藏数量</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-history fa-2x text-info mb-2"></i>
+                                <h4 class="mb-0">{$historyCount}</h4>
+                                <small class="text-muted">观看历史</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <i class="fas fa-envelope fa-2x text-warning mb-2"></i>
+                                <h4 class="mb-0">{$unreadMessageCount}</h4>
+                                <small class="text-muted">未读消息</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 最近活动 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-clock me-2"></i>最近活动</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-marker bg-primary"></div>
+                                <div class="timeline-content">
+                                    <h6 class="mb-1">欢迎使用影视CMS</h6>
+                                    <p class="text-muted small mb-0">2024-01-01 12:00:00</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<style>
+    .timeline {
+        position: relative;
+        padding-left: 30px;
+    }
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 15px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: #e9ecef;
+    }
+    .timeline-item {
+        position: relative;
+        margin-bottom: 20px;
+    }
+    .timeline-marker {
+        position: absolute;
+        left: -22px;
+        top: 5px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+    }
+    .timeline-content {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+    }
+</style>
+
+{include file="layout/footer" /}

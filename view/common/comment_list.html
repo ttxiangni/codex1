@@ -1,0 +1,79 @@
+<!-- 评论列表组件 -->
+<div id="comments-list">
+    {if $comments->isEmpty()}
+    <div class="text-center py-4 text-muted">
+        <i class="fas fa-comment-slash fa-2x mb-2"></i>
+        <p>{$empty_message|default='暂无评论，快来发表第一条评论吧！'}</p>
+    </div>
+    {else}
+    {foreach $comments as $comment}
+    <div class="comment-item border-bottom pb-3 mb-3" id="comment-{$comment.id}">
+        <div class="d-flex">
+            <div class="flex-shrink-0">
+                <div class="avatar-wrapper me-3">
+                    <img src="https://via.placeholder.com/40x40?text={$comment.user.username|substr=0,1}" alt="{$comment.user.username}" class="rounded-circle" style="width: 40px; height: 40px;">
+                </div>
+            </div>
+            <div class="flex-grow-1">
+                <div class="comment-header d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                        <span class="fw-bold text-primary">{$comment.user.username}</span>
+                        <span class="text-muted ms-2 small">{$comment.create_time|date='Y-m-d H:i'}</span>
+                    </div>
+                    <button class="btn btn-link btn-sm text-muted p-0" onclick="toggleReplyForm({$comment.id})">
+                        <i class="fas fa-reply me-1"></i>回复
+                    </button>
+                </div>
+                <div class="comment-content mb-2">
+                    {$comment.content}
+                </div>
+
+                <!-- 回复表单 -->
+                <div class="reply-form mt-3" id="reply-form-{$comment.id}" style="display: none;">
+                    <form onsubmit="submitReply(event, {$comment.id})">
+                        <div class="mb-2">
+                            <textarea class="form-control form-control-sm" rows="3" placeholder="写下你的回复..." required></textarea>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-outline-secondary btn-sm me-2" onclick="toggleReplyForm({$comment.id})">取消</button>
+                            <button type="submit" class="btn btn-primary btn-sm">回复</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 回复列表 -->
+                {if $comment.replies}
+                <div class="replies mt-3 ps-4 border-start">
+                    {foreach $comment.replies as $reply}
+                    <div class="reply-item mb-2">
+                        <div class="d-flex">
+                            <div class="flex-shrink-0 me-2">
+                                <img src="https://via.placeholder.com/32x32?text={$reply.user.username|substr=0,1}" alt="{$reply.user.username}" class="rounded-circle" style="width: 32px; height: 32px;">
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="reply-header mb-1">
+                                    <span class="fw-bold text-success small">{$reply.user.username}</span>
+                                    <span class="text-muted ms-2 small">{$reply.create_time|date='Y-m-d H:i'}</span>
+                                </div>
+                                <div class="reply-content small text-muted">
+                                    {$reply.content}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/foreach}
+                </div>
+                {/if}
+            </div>
+        </div>
+    </div>
+    {/foreach}
+
+    <!-- 评论分页 -->
+    {if $comments->lastPage() > 1}
+    <nav aria-label="评论分页" class="mt-3">
+        {$comments->render()}
+    </nav>
+    {/if}
+    {/if}
+</div>

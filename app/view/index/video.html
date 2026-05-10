@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{$video.vod_name} - {$site_name}</title>
+    <meta name="keywords" content="{$video.vod_keywords},{$video.vod_name},{$video.vod_actor},{$video.vod_director}">
+    <meta name="description" content="{$video.vod_content|mb_substr=0,150,'...'}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/video.js@7.20.3/dist/video-js.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007bff;
+            --secondary-color: #6c757d;
+            --dark-bg: #1a1a1a;
+            --card-bg: #2d2d2d;
+            --text-color: #ffffff;
+            --text-muted: #b0b0b0;
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text-color);
+            font-family: 'Microsoft YaHei', sans-serif;
+        }
+        
+        .navbar {
+            background-color: var(--card-bg) !important;
+            border-bottom: 1px solid #404040;
+        }
+        
+        .navbar-brand {
+            color: var(--primary-color) !important;
+            font-weight: bold;
+        }
+        
+        .nav-link {
+            color: var(--text-color) !important;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid #404040;
+            color: var(--text-color);
+        }
+        
+        .video-container {
+            background-color: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .video-info {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .rating-stars {
+            color: #ffd700;
+            font-size: 1.2rem;
+        }
+        
+        .actor-card {
+            transition: transform 0.2s;
+        }
+        
+        .actor-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .episode-btn {
+            background-color: var(--card-bg);
+            border: 1px solid #404040;
+            color: var(--text-color);
+            margin: 0.25rem;
+            transition: all 0.2s;
+        }
+        
+        .episode-btn:hover,
+        .episode-btn.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+        
+        .comment-card {
+            background-color: var(--card-bg);
+            border: 1px solid #404040;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .related-video {
+            transition: transform 0.2s;
+        }
+        
+        .related-video:hover {
+            transform: translateY(-5px);
+        }
+        
+        .footer {
+            background-color: var(--card-bg);
+            border-top: 1px solid #404040;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .play-source {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .play-source-title {
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 768px) {
+            .video-info {
+                padding: 1rem;
+            }
+            
+            .episode-btn {
+                font-size: 0.9rem;
+                padding: 0.5rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-film"></i> {$site_name}
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">首页</a>
+                    </li>
+                    {volist name="categories" id="category"}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{categoryUrl category=$category /}">{$category.type_name}</a>
+                    </li>
+                    {/volist}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/actor">演员</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/article">资讯</a>
+                    </li>
+                </ul>
+                <form class="d-flex" action="/search" method="get">
+                    <input class="form-control me-2" type="search" name="keyword" placeholder="搜索电影、电视剧..." value="{$keyword}">
+                    <button class="btn btn-primary" type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container my-4">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-3">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/" class="text-decoration-none">首页</a></li>
+                <li class="breadcrumb-item"><a href="{categoryUrl category=$category /}" class="text-decoration-none">{$category.type_name}</a></li>
+                <li class="breadcrumb-item active text-muted">{$video.vod_name}</li>
+            </ol>
+        </nav>
+
+        <div class="row">
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <!-- Video Player -->
+                <div class="video-container">
+                    <video id="videoPlayer" class="video-js vjs-big-play-centered" controls preload="auto" poster="{$video.vod_pic}">
+                        <source src="{$video.vod_play_url}" type="video/mp4">
+                        <p class="vjs-no-js">
+                            To view this video please enable JavaScript, and consider upgrading to a web browser that
+                            <a href="https://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+                        </p>
+                    </video>
+                </div>
+
+                <!-- Video Info -->
+                <div class="video-info">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <h1 class="mb-3">{$video.vod_name}</h1>
+                            <div class="mb-3">
+                                {if $video.vod_score > 0}
+                                <span class="rating-stars me-3">
+                                    {for start="1" end="5"}
+                                        {if $video.vod_score >= $i}
+                                            <i class="bi bi-star-fill"></i>
+                                        {elseif $video.vod_score >= $i - 0.5}
+                                            <i class="bi bi-star-half"></i>
+                                        {else}
+                                            <i class="bi bi-star"></i>
+                                        {/if}
+                                    {/for}
+                                    <span class="ms-2">{$video.vod_score}</span>
+                                </span>
+                                {/if}
+                                <span class="badge bg-primary me-2">{$category.type_name}</span>
+                                {if $video.vod_is_vip == 1}
+                                <span class="badge bg-danger">VIP</span>
+                                {/if}
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-sm-6">
+                                    <p class="mb-1"><strong>导演：</strong>{$video.vod_director}</p>
+                                    <p class="mb-1"><strong>主演：</strong>{$video.vod_actor}</p>
+                                    <p class="mb-1"><strong>编剧：</strong>{$video.vod_writer}</p>
+                                </div>
+                                <div class="col-sm-6">
+                                    <p class="mb-1"><strong>地区：</strong>{$video.vod_area}</p>
+                                    <p class="mb-1"><strong>语言：</strong>{$video.vod_lang}</p>
+                                    <p class="mb-1"><strong>年份：</strong>{$video.vod_year}</p>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <strong>剧情简介：</strong>
+                                <p class="mt-2">{$video.vod_content}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <img src="{$video.vod_pic}" class="img-fluid rounded" alt="{$video.vod_name}">
+                            <div class="mt-3">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span><i class="bi bi-eye"></i> {$video.vod_hits} 次观看</span>
+                                    <span><i class="bi bi-calendar"></i> {$video.vod_create_time|date='Y-m-d',###}</span>
+                                </div>
+                                <button class="btn btn-primary w-100 mb-2">
+                                    <i class="bi bi-play-fill"></i> 立即播放
+                                </button>
+                                <button class="btn btn-outline-primary w-100 mb-2">
+                                    <i class="bi bi-heart"></i> 收藏
+                                </button>
+                                <button class="btn btn-outline-secondary w-100">
+                                    <i class="bi bi-share"></i> 分享
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Episodes (for TV series) -->
+                {if $episodes}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">选集</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="play-source">
+                            <div class="play-source-title">播放源</div>
+                            <div class="d-flex flex-wrap">
+                                {volist name="episodes" id="episode"}
+                                <button class="btn episode-btn" data-episode="{$episode.episode_id}" data-url="{$episode.episode_play_url}">
+                                    {$episode.episode_title}
+                                </button>
+                                {/volist}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+
+                <!-- Cast -->
+                {if $actors}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">演员表</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            {volist name="actors" id="actor"}
+                            <div class="col-md-3 col-sm-4 col-6 mb-3">
+                                <div class="card actor-card h-100">
+                                    <img src="{$actor.actor_avatar}" class="card-img-top" alt="{$actor.actor_name}" style="height: 150px; object-fit: cover;">
+                                    <div class="card-body p-2">
+                                        <h6 class="card-title mb-1">
+                                            <a href="/actor/{$actor.actor_en}" class="text-decoration-none text-white">{$actor.actor_name}</a>
+                                        </h6>
+                                        <p class="card-text small text-muted mb-0">{$actor.role_name}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            {/volist}
+                        </div>
+                    </div>
+                </div>
+                {/if}
+
+                <!-- Comments -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">评论区 ({$comments.total})</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Comment Form -->
+                        <div class="mb-4">
+                            <h6>发表评论</h6>
+                            <form id="commentForm">
+                                <div class="mb-3">
+                                    <textarea class="form-control" id="commentContent" rows="3" placeholder="写下你的评论..."></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">发表评论</button>
+                            </form>
+                        </div>
+
+                        <!-- Comments List -->
+                        <div id="commentsList">
+                            {volist name="comments" id="comment"}
+                            <div class="comment-card">
+                                <div class="d-flex">
+                                    <img src="{$comment.user.user_avatar|default='/static/images/default-avatar.png'}" class="rounded-circle me-3" style="width: 40px; height: 40px;" alt="{$comment.user.user_nickname}">
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <strong>{$comment.user.user_nickname}</strong>
+                                            <small class="text-muted">{$comment.comment_create_time|date='Y-m-d H:i',###}</small>
+                                        </div>
+                                        <p class="mb-2">{$comment.comment_content}</p>
+                                        <div class="d-flex align-items-center">
+                                            <button class="btn btn-sm btn-outline-secondary me-2">
+                                                <i class="bi bi-hand-thumbs-up"></i> {$comment.comment_likes}
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary">回复</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {/volist}
+                        </div>
+
+                        {if $comments.last_page > 1}
+                        <div class="text-center mt-3">
+                            <button class="btn btn-outline-primary" id="loadMoreComments">
+                                <i class="bi bi-chevron-down"></i> 加载更多评论
+                            </button>
+                        </div>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-3">
+                <!-- Related Videos -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0">相关推荐</h6>
+                    </div>
+                    <div class="card-body p-0">
+                        {volist name="related_videos" id="related"}
+                        <div class="d-flex p-2 border-bottom border-secondary related-video">
+                            <img src="{$related.vod_pic}" class="me-3" style="width: 60px; height: 80px; object-fit: cover;" alt="{$related.vod_name}">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-1">
+                                    <a href="{videoUrl video=$related /}" class="text-decoration-none text-white small">{$related.vod_name}</a>
+                                </h6>
+                                <p class="text-muted small mb-0">{$related.vod_year} · {$related.vod_area}</p>
+                            </div>
+                        </div>
+                        {/volist}
+                    </div>
+                </div>
+
+                <!-- Popular Tags -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h6 class="mb-0">热门标签</h6>
+                    </div>
+                    <div class="card-body">
+                        {volist name="tags" id="tag"}
+                        <a href="/tag/{$tag}" class="btn btn-sm btn-outline-secondary m-1">{$tag}</a>
+                        {/volist}
+                    </div>
+                </div>
+
+                <!-- Statistics -->
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0">数据统计</h6>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="h4 mb-1">{$video.vod_hits}</div>
+                                <small class="text-muted">播放量</small>
+                            </div>
+                            <div class="col-6">
+                                <div class="h4 mb-1">{$comments.total}</div>
+                                <small class="text-muted">评论数</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5>{$site_name}</h5>
+                    <p class="text-muted">专业的影视资源分享平台，为您提供最新、最全的电影、电视剧、综艺等视频内容。</p>
+                </div>
+                <div class="col-md-4">
+                    <h5>友情链接</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-muted">影视资讯</a></li>
+                        <li><a href="#" class="text-muted">娱乐新闻</a></li>
+                        <li><a href="#" class="text-muted">影评推荐</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5>联系我们</h5>
+                    <p class="text-muted">
+                        <i class="bi bi-envelope"></i> contact@{$site_domain}<br>
+                        <i class="bi bi-telephone"></i> 400-888-8888
+                    </p>
+                </div>
+            </div>
+            <hr class="my-4">
+            <div class="text-center text-muted">
+                <p>&copy; 2024 {$site_name}. All rights reserved. | 备案号：京ICP备12345678号</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/video.js@7.20.3/dist/video-js.min.js"></script>
+    <script>
+        // Initialize video player
+        const player = videojs('videoPlayer', {
+            autoplay: false,
+            controls: true,
+            responsive: true,
+            fluid: true,
+            playbackRates: [0.5, 1, 1.25, 1.5, 2],
+            controlBar: {
+                children: [
+                    'playToggle',
+                    'volumePanel',
+                    'currentTimeDisplay',
+                    'timeDivider',
+                    'durationDisplay',
+                    'progressControl',
+                    'playbackRateMenuButton',
+                    'fullscreenToggle'
+                ]
+            }
+        });
+
+        // Episode switching
+        document.querySelectorAll('.episode-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const url = this.getAttribute('data-url');
+                const episodeId = this.getAttribute('data-episode');
+                
+                // Update active button
+                document.querySelectorAll('.episode-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Change video source
+                player.src({ src: url, type: 'video/mp4' });
+                player.load();
+                player.play();
+                
+                // Update URL without page reload
+                history.pushState(null, null, `/video/{$video.vod_en}?episode=${episodeId}`);
+            });
+        });
+
+        // Comment form submission
+        document.getElementById('commentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const content = document.getElementById('commentContent').value.trim();
+            
+            if (!content) {
+                alert('请输入评论内容');
+                return;
+            }
+            
+            fetch('/api/comment', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    vod_id: {$video.vod_id},
+                    content: content
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    location.reload();
+                } else {
+                    alert(data.message || '评论失败');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('评论失败，请重试');
+            });
+        });
+
+        // Load more comments
+        let commentPage = 2;
+        document.getElementById('loadMoreComments')?.addEventListener('click', function() {
+            fetch(`/api/comments?vod_id={$video.vod_id}&page=${commentPage}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.comments && data.comments.length > 0) {
+                        const commentsList = document.getElementById('commentsList');
+                        data.comments.forEach(comment => {
+                            const commentCard = createCommentCard(comment);
+                            commentsList.appendChild(commentCard);
+                        });
+                        commentPage++;
+                    } else {
+                        this.disabled = true;
+                        this.innerHTML = '<i class="bi bi-check-circle"></i> 没有更多评论';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading comments:', error);
+                });
+        });
+
+        function createCommentCard(comment) {
+            const div = document.createElement('div');
+            div.className = 'comment-card';
+            div.innerHTML = `
+                <div class="d-flex">
+                    <img src="${comment.user.user_avatar || '/static/images/default-avatar.png'}" class="rounded-circle me-3" style="width: 40px; height: 40px;" alt="${comment.user.user_nickname}">
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <strong>${comment.user.user_nickname}</strong>
+                            <small class="text-muted">${new Date(comment.comment_create_time).toLocaleString('zh-CN')}</small>
+                        </div>
+                        <p class="mb-2">${comment.comment_content}</p>
+                        <div class="d-flex align-items-center">
+                            <button class="btn btn-sm btn-outline-secondary me-2">
+                                <i class="bi bi-hand-thumbs-up"></i> ${comment.comment_likes}
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary">回复</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            return div;
+        }
+    </script>
+</body>
+</html>

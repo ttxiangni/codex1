@@ -1,0 +1,66 @@
+{include file="layout/header" title="搜索 '{$keyword}'" /}
+
+    <!-- 搜索结果统计 -->
+    <section class="search-result-count">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p class="mb-0">找到 <strong>{$videos->total()}</strong> 个与 "<strong>{$keyword}</strong>" 相关的影视作品</p>
+                </div>
+                <div class="col-md-6 text-end">
+                    <form class="d-inline-flex" action="/search" method="get">
+                        <input type="hidden" name="keyword" value="{$keyword}">
+                        <select class="form-select form-select-sm me-2" name="sort">
+                            <option value="newest">最新发布</option>
+                            <option value="oldest">最早发布</option>
+                            <option value="title">按标题排序</option>
+                        </select>
+                        <button class="btn btn-outline-primary btn-sm" type="submit">排序</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 搜索结果 -->
+    <section class="py-5">
+        <div class="container">
+            {if $videos->isEmpty()}
+            {include file="common/empty_state" icon="search" title="没有找到相关内容" message="尝试使用其他关键词搜索" show_search=true show_home_link=true /}
+            {else}
+            <div class="row">
+                {foreach $videos as $video}
+                {include file="common/video_card" /}
+                {/foreach}
+            </div>
+
+            <!-- 分页 -->
+            <nav aria-label="搜索结果分页" class="mt-4">
+                {$videos->render()}
+            </nav>
+            {/if}
+        </div>
+    </section>
+
+    <!-- 热门搜索 -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h3 class="mb-4 text-center">热门搜索</h3>
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    {include file="common/hot_tags" tags=[
+                        ['name'=>'动作片'],
+                        ['name'=>'爱情片'],
+                        ['name'=>'喜剧片'],
+                        ['name'=>'科幻片'],
+                        ['name'=>'恐怖片'],
+                        ['name'=>'纪录片'],
+                        ['name'=>'动画片'],
+                        ['name'=>'电视剧']
+                    ] /}
+                </div>
+            </div>
+        </div>
+    </section>
+
+{include file="layout/footer" /}

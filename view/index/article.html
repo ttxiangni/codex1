@@ -1,0 +1,67 @@
+{include file="layout/header" /}
+{include file="seo/article" /}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <article class="article-detail">
+                <h1 class="article-title">{feifei:article name="title" /}</h1>
+                <div class="article-meta mb-3">
+                    <span class="text-muted">分类：{feifei:article name="category_name" /}</span>
+                    <span class="text-muted ml-3">作者：{feifei:article name="author" /}</span>
+                    <span class="text-muted ml-3">发布时间：{feifei:article name="create_time" /}</span>
+                    <span class="text-muted ml-3">浏览：{feifei:article name="views" /}</span>
+                </div>
+                <div class="article-content">
+                    {feifei:article name="content" /}
+                </div>
+            </article>
+            
+            <!-- 相关文章 -->
+            <div class="related-articles mt-5">
+                <h3>相关文章</h3>
+                <div class="row">
+                    {feifei:article_list cid="$category_id" limit="6" order="create_time desc"}
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title"><a href="{feifei:article_link id="$id" /}">{feifei:article name="title" /}</a></h5>
+                                <p class="card-text text-muted">{feifei:article name="description" /}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {/feifei:article_list}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <!-- 侧边栏 -->
+            <div class="sidebar">
+                <div class="widget mb-4">
+                    <h4>热门文章</h4>
+                    <ul class="list-unstyled">
+                        {feifei:article_list limit="10" order="views desc"}
+                        <li class="mb-2">
+                            <a href="{feifei:article_link id="$id" /}">{feifei:article name="title" /}</a>
+                        </li>
+                        {/feifei:article_list}
+                    </ul>
+                </div>
+                
+                <div class="widget mb-4">
+                    <h4>文章分类</h4>
+                    <ul class="list-unstyled">
+                        {feifei:article_category_list}
+                        <li class="mb-2">
+                            <a href="{feifei:article_category_link id="$id" /}">{feifei:category name="name" /}</a>
+                        </li>
+                        {/feifei:article_category_list}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{include file="layout/footer" /}

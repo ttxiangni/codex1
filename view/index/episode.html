@@ -1,0 +1,96 @@
+{include file="layout/header" /}
+{include file="seo/episode" /}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="episode-detail">
+                <div class="episode-header mb-4">
+                    <h1 class="episode-title">{feifei:episode name="title" /}</h1>
+                    <div class="episode-meta">
+                        <span class="badge badge-primary">第{feifei:episode name="episode_number" /}集</span>
+                        <span class="text-muted ml-3">播放时长：{feifei:episode name="duration" /}</span>
+                        <span class="text-muted ml-3">上映日期：{feifei:episode name="air_date" /}</span>
+                    </div>
+                </div>
+                
+                <div class="episode-info mb-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <strong>导演：</strong>{feifei:episode name="director" /}<br>
+                            <strong>编剧：</strong>{feifei:episode name="writer" /}<br>
+                            <strong>主演：</strong>{feifei:episode name="actors" /}
+                        </div>
+                        <div class="col-md-6">
+                            <strong>视频ID：</strong>{feifei:episode name="video_id" /}<br>
+                            <strong>集数：</strong>{feifei:episode name="episode_number" /}<br>
+                            <strong>状态：</strong>{feifei:episode name="status" /}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="episode-plot">
+                    <h3>剧情简介</h3>
+                    <p>{feifei:episode name="plot" /}</p>
+                </div>
+                
+                <!-- 播放器 -->
+                <div class="episode-player mt-4">
+                    <h3>在线播放</h3>
+                    <div class="player-container">
+                        {feifei:episode_player /}
+                    </div>
+                </div>
+                
+                <!-- 相关集数 -->
+                <div class="related-episodes mt-5">
+                    <h3>本剧集数</h3>
+                    <div class="row">
+                        {feifei:episode_list video_id="$video_id" limit="20"}
+                        <div class="col-md-3 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <a href="{feifei:episode_link id="$id" /}">第{feifei:episode name="episode_number" /}集</a>
+                                    </h5>
+                                    <p class="card-text text-muted">{feifei:episode name="title" /}</p>
+                                    <small class="text-muted">{feifei:episode name="air_date" /}</small>
+                                </div>
+                            </div>
+                        </div>
+                        {/feifei:episode_list}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <!-- 侧边栏 -->
+            <div class="sidebar">
+                <div class="widget mb-4">
+                    <h4>热门剧集</h4>
+                    <ul class="list-unstyled">
+                        {feifei:episode_list limit="10" order="views desc"}
+                        <li class="mb-2">
+                            <a href="{feifei:episode_link id="$id" /}">{feifei:episode name="title" /} - 第{feifei:episode name="episode_number" /}集</a>
+                        </li>
+                        {/feifei:episode_list}
+                    </ul>
+                </div>
+                
+                <div class="widget mb-4">
+                    <h4>剧集分类</h4>
+                    <ul class="list-unstyled">
+                        {feifei:video_category_list}
+                        <li class="mb-2">
+                            <a href="{feifei:video_category_link id="$id" /}">{feifei:category name="name" /}</a>
+                        </li>
+                        {/feifei:video_category_list}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{include file="layout/footer" /}

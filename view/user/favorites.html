@@ -1,0 +1,79 @@
+{include file="layout/header" title="我的收藏" current_page="user" /}
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-3">
+                <!-- 用户信息卡片 -->
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        <img src="https://via.placeholder.com/80x80?text=U" alt="用户头像" class="rounded-circle mb-3" style="width: 80px; height: 80px;">
+                        <h5>用户名</h5>
+                        <p class="text-muted small">普通会员</p>
+                    </div>
+                </div>
+
+                <!-- 导航菜单 -->
+                <div class="list-group">
+                    <a href="/user" class="list-group-item list-group-item-action">
+                        <i class="fas fa-tachometer-alt me-2"></i>用户中心
+                    </a>
+                    <a href="/user/favorites" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-heart me-2"></i>我的收藏
+                    </a>
+                    <a href="/user/history" class="list-group-item list-group-item-action">
+                        <i class="fas fa-history me-2"></i>观看历史
+                    </a>
+                    <a href="/user/messages" class="list-group-item list-group-item-action">
+                        <i class="fas fa-envelope me-2"></i>站内信
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4><i class="fas fa-heart text-danger me-2"></i>我的收藏</h4>
+                    <span class="badge bg-danger">共 {$favorites->total()} 个收藏</span>
+                </div>
+
+                {if $favorites->isEmpty()}
+                <div class="text-center py-5">
+                    <i class="fas fa-heart fa-3x text-muted mb-3"></i>
+                    <h4 class="text-muted">暂无收藏</h4>
+                    <p class="text-muted">快去发现喜欢的视频并收藏吧！</p>
+                    <a href="/" class="btn btn-primary">浏览视频</a>
+                </div>
+                {else}
+                <div class="row">
+                    {foreach $favorites as $favorite}
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                        <div class="card video-card h-100">
+                            <img src="{$favorite.video.image}" class="card-img-top" alt="{$favorite.video.title}" style="height: 200px; object-fit: cover;">
+                            <div class="card-body d-flex flex-column">
+                                <h6 class="card-title">
+                                    <a href="{videoUrl video=$favorite.video /}" class="text-decoration-none text-dark" title="{$favorite.video.title}">
+                                        {$favorite.video.title|substr=0,15}{if strlen($favorite.video.title) > 15}...{/if}
+                                    </a>
+                                </h6>
+                                <p class="card-text small text-muted flex-grow-1">{$favorite.video.content|substr=0,40}...</p>
+                                <div class="d-flex justify-content-between align-items-center mt-auto">
+                                    <small class="text-muted">{$favorite.create_time|date='Y-m-d'}</small>
+                                    <span class="badge bg-primary">{$favorite.video.category.name}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/foreach}
+                </div>
+
+                <!-- 分页 -->
+                {if $favorites->lastPage() > 1}
+                <nav aria-label="收藏分页" class="mt-4">
+                    {$favorites->render()}
+                </nav>
+                {/if}
+                {/if}
+            </div>
+        </div>
+    </div>
+
+{include file="layout/footer" /}

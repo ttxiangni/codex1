@@ -1,0 +1,101 @@
+{include file="layout/header" /}
+{include file="seo/actor_list" /}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="actor-list">
+                <h1 class="page-title">演员列表</h1>
+                
+                <!-- 筛选条件 -->
+                <div class="filter-bar mb-4">
+                    <form method="get" class="form-inline">
+                        <div class="form-group mr-3">
+                            <label for="region" class="mr-2">地区：</label>
+                            <select name="region" id="region" class="form-control">
+                                <option value="">全部</option>
+                                {feifei:actor_region_list}
+                                <option value="{feifei:region name="region" /}" {if $region == '{feifei:region name="region" /}'}selected{/if}>{feifei:region name="name" /}</option>
+                                {/feifei:actor_region_list}
+                            </select>
+                        </div>
+                        <div class="form-group mr-3">
+                            <label for="gender" class="mr-2">性别：</label>
+                            <select name="gender" id="gender" class="form-control">
+                                <option value="">全部</option>
+                                <option value="男" {if $gender == '男'}selected{/if}>男</option>
+                                <option value="女" {if $gender == '女'}selected{/if}>女</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">筛选</button>
+                    </form>
+                </div>
+                
+                <div class="actors-grid mt-4">
+                    <div class="row">
+                        {feifei:actor_list region="$region" gender="$gender" limit="24"}
+                        <div class="col-md-3 mb-4">
+                            <div class="card actor-card">
+                                <img src="{feifei:actor name="avatar" /}" class="card-img-top" alt="{feifei:actor name="name" /}">
+                                <div class="card-body">
+                                    <h5 class="card-title"><a href="{feifei:actor_link id="$id" /}">{feifei:actor name="name" /}</a></h5>
+                                    <p class="card-text text-muted">
+                                        {feifei:actor name="english_name" /}<br>
+                                        {feifei:actor name="region" /} | {feifei:actor name="gender" /}
+                                    </p>
+                                    <small class="text-muted">参演作品：{feifei:actor name="video_count" /}部</small>
+                                </div>
+                            </div>
+                        </div>
+                        {/feifei:actor_list}
+                    </div>
+                </div>
+                
+                <!-- 分页 -->
+                <div class="pagination mt-4">
+                    {feifei:actor_pagination /}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <!-- 侧边栏 -->
+            <div class="sidebar">
+                <div class="widget mb-4">
+                    <h4>热门演员</h4>
+                    <ul class="list-unstyled">
+                        {feifei:actor_list limit="10" order="views desc"}
+                        <li class="mb-2">
+                            <a href="{feifei:actor_link id="$id" /}">{feifei:actor name="name" /}</a>
+                        </li>
+                        {/feifei:actor_list}
+                    </ul>
+                </div>
+                
+                <div class="widget mb-4">
+                    <h4>演员地区</h4>
+                    <ul class="list-unstyled">
+                        {feifei:actor_region_list}
+                        <li class="mb-2">
+                            <a href="{feifei:actor_region_link region="$region" /}">{feifei:region name="region" /}</a>
+                        </li>
+                        {/feifei:actor_region_list}
+                    </ul>
+                </div>
+                
+                <div class="widget mb-4">
+                    <h4>最新演员</h4>
+                    <ul class="list-unstyled">
+                        {feifei:actor_list limit="10" order="create_time desc"}
+                        <li class="mb-2">
+                            <a href="{feifei:actor_link id="$id" /}">{feifei:actor name="name" /}</a>
+                        </li>
+                        {/feifei:actor_list}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{include file="layout/footer" /}

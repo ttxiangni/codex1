@@ -1,0 +1,66 @@
+{include file="admin/layout/header" /}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">文章分类管理</h3>
+                    <div class="card-tools">
+                        <a href="{:url('admin/article/category/add')}" class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> 添加分类
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>分类名称</th>
+                                <th>排序</th>
+                                <th>文章数量</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {foreach $categories as $category}
+                            <tr>
+                                <td>{$category.id}</td>
+                                <td>{$category.name}</td>
+                                <td>{$category.sort}</td>
+                                <td>{$category.article_count ?? 0}</td>
+                                <td>
+                                    <a href="{:url('admin/article/category/edit', ['id' => $category.id])}" class="btn btn-sm btn-warning">
+                                        <i class="fas fa-edit"></i> 编辑
+                                    </a>
+                                    <a href="javascript:void(0);" onclick="deleteCategory({$category.id})" class="btn btn-sm btn-danger">
+                                        <i class="fas fa-trash"></i> 删除
+                                    </a>
+                                </td>
+                            </tr>
+                            {/foreach}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function deleteCategory(id) {
+    if (confirm('确定要删除这个分类吗？')) {
+        $.post('{:url("admin/article/category/delete", ["id" => "__ID__"])}'.replace('__ID__', id), function(data) {
+            if (data.code == 1) {
+                alert(data.msg);
+                location.reload();
+            } else {
+                alert(data.msg);
+            }
+        });
+    }
+}
+</script>
+
+{include file="admin/layout/footer" /}

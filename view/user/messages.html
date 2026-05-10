@@ -1,0 +1,98 @@
+{include file="layout/header" title="站内信" current_page="user" /}
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-3">
+                <!-- 用户信息卡片 -->
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        <img src="https://via.placeholder.com/80x80?text=U" alt="用户头像" class="rounded-circle mb-3" style="width: 80px; height: 80px;">
+                        <h5>用户名</h5>
+                        <p class="text-muted small">普通会员</p>
+                    </div>
+                </div>
+
+                <!-- 导航菜单 -->
+                <div class="list-group">
+                    <a href="/user" class="list-group-item list-group-item-action">
+                        <i class="fas fa-tachometer-alt me-2"></i>用户中心
+                    </a>
+                    <a href="/user/favorites" class="list-group-item list-group-item-action">
+                        <i class="fas fa-heart me-2"></i>我的收藏
+                    </a>
+                    <a href="/user/history" class="list-group-item list-group-item-action">
+                        <i class="fas fa-history me-2"></i>观看历史
+                    </a>
+                    <a href="/user/messages" class="list-group-item list-group-item-action active">
+                        <i class="fas fa-envelope me-2"></i>站内信
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-9">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4><i class="fas fa-envelope text-warning me-2"></i>站内信</h4>
+                    <span class="badge bg-warning">共 {$messages->total()} 条消息</span>
+                </div>
+
+                {if $messages->isEmpty()}
+                <div class="text-center py-5">
+                    <i class="fas fa-envelope-open fa-3x text-muted mb-3"></i>
+                    <h4 class="text-muted">暂无消息</h4>
+                    <p class="text-muted">当有人回复您的评论时，您会收到站内信通知</p>
+                </div>
+                {else}
+                <div class="messages-list">
+                    {foreach $messages as $message}
+                    <div class="card mb-3 {if $message.is_read == 0}border-primary{/if}">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h6 class="card-title mb-1">
+                                        {if $message.is_read == 0}<span class="badge bg-primary me-2">未读</span>{/if}
+                                        {$message.title}
+                                    </h6>
+                                    <small class="text-muted">发件人：{$message.sender.username} | {$message.create_time|date='Y-m-d H:i'}</small>
+                                </div>
+                                {if $message.is_read == 0}
+                                <button class="btn btn-sm btn-outline-primary" onclick="markAsRead({$message.id})">
+                                    标记已读
+                                </button>
+                                {/if}
+                            </div>
+                            <p class="card-text">{$message.content}</p>
+                        </div>
+                    </div>
+                    {/foreach}
+                </div>
+
+                <!-- 分页 -->
+                {if $messages->lastPage() > 1}
+                <nav aria-label="消息分页" class="mt-4">
+                    {$messages->render()}
+                </nav>
+                {/if}
+                {/if}
+            </div>
+        </div>
+    </div>
+
+<script>
+    // 标记消息为已读
+    function markAsRead(messageId) {
+        fetch(`/api/markMessageRead/${messageId}`, {
+            method: 'POST'
+        }).then(response => response.json()).then(data => {
+            if (data.code === 0) {
+                location.reload();
+            } else {
+                alert(data.msg || '操作失败');
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+            alert('网络错误，请重试');
+        });
+    }
+</script>
+
+{include file="layout/footer" /}

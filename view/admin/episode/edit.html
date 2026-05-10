@@ -1,0 +1,105 @@
+{include file="admin/layout/header" /}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">编辑分集</h3>
+                </div>
+                <div class="card-body">
+                    <form id="episodeForm" method="post" action="{:url('admin/episode/edit', ['id' => $episode.id])}">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="video_id">所属视频</label>
+                                    <select class="form-control" id="video_id" name="video_id" required>
+                                        <option value="">请选择视频</option>
+                                        {foreach $videos as $video}
+                                        <option value="{$video.id}" {if $video.id == $episode.video_id}selected{/if}>{$video.name}</option>
+                                        {/foreach}
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="title">分集标题</label>
+                                    <input type="text" class="form-control" id="title" name="title" value="{$episode.title}" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="episode_number">集数</label>
+                                    <input type="number" class="form-control" id="episode_number" name="episode_number" value="{$episode.episode_number}" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="duration">时长</label>
+                                    <input type="text" class="form-control" id="duration" name="duration" value="{$episode.duration}" placeholder="例如：45分钟">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="air_date">上映日期</label>
+                                    <input type="date" class="form-control" id="air_date" name="air_date" value="{$episode.air_date}">
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="director">导演</label>
+                                    <input type="text" class="form-control" id="director" name="director" value="{$episode.director}">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="writer">编剧</label>
+                                    <input type="text" class="form-control" id="writer" name="writer" value="{$episode.writer}">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="actors">主演</label>
+                                    <input type="text" class="form-control" id="actors" name="actors" value="{$episode.actors}" placeholder="用逗号分隔">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="status">状态</label>
+                                    <select class="form-control" id="status" name="status">
+                                        <option value="1" {if $episode.status == 1}selected{/if}>发布</option>
+                                        <option value="0" {if $episode.status == 0}selected{/if}>未发布</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="play_url">播放地址</label>
+                                    <input type="text" class="form-control" id="play_url" name="play_url" value="{$episode.play_url}" placeholder="视频播放URL">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="plot">剧情简介</label>
+                            <textarea class="form-control" id="plot" name="plot" rows="5">{$episode.plot}</textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">保存</button>
+                        <a href="{:url('admin/episode')}" class="btn btn-secondary">返回</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$('#episodeForm').submit(function(e) {
+    e.preventDefault();
+    
+    $.post($(this).attr('action'), $(this).serialize(), function(data) {
+        if (data.code == 1) {
+            alert(data.msg);
+            location.href = '{:url("admin/episode")}';
+        } else {
+            alert(data.msg);
+        }
+    });
+});
+</script>
+
+{include file="admin/layout/footer" /}

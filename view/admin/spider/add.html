@@ -1,0 +1,99 @@
+{include file="admin/layout/header" /}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">添加采集源</h3>
+                </div>
+                <div class="card-body">
+                    <form id="spiderForm" method="post" action="{:url('admin/spider/add')}">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="name">采集源名称</label>
+                                    <input type="text" class="form-control" id="name" name="name" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="api_url">API地址</label>
+                                    <input type="text" class="form-control" id="api_url" name="api_url" placeholder="http://example.com/api" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="api_key">API密钥</label>
+                                    <input type="text" class="form-control" id="api_key" name="api_key">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="collect_type">采集类型</label>
+                                    <select class="form-control" id="collect_type" name="collect_type">
+                                        <option value="video">视频</option>
+                                        <option value="actor">演员</option>
+                                        <option value="article">文章</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="status">状态</label>
+                                    <select class="form-control" id="status" name="status">
+                                        <option value="1">启用</option>
+                                        <option value="0">禁用</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="collect_interval">采集间隔(分钟)</label>
+                                    <input type="number" class="form-control" id="collect_interval" name="collect_interval" value="60">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="max_collect">最大采集数量</label>
+                                    <input type="number" class="form-control" id="max_collect" name="max_collect" value="100">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="filter_keywords">过滤关键词</label>
+                                    <input type="text" class="form-control" id="filter_keywords" name="filter_keywords" placeholder="用逗号分隔">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="replace_words">替换词</label>
+                                    <textarea class="form-control" id="replace_words" name="replace_words" rows="3" placeholder="格式：原词=替换词，每行一个"></textarea>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="description">描述</label>
+                                    <textarea class="form-control" id="description" name="description" rows="2"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary">保存</button>
+                        <a href="{:url('admin/spider')}" class="btn btn-secondary">返回</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$('#spiderForm').submit(function(e) {
+    e.preventDefault();
+    
+    $.post($(this).attr('action'), $(this).serialize(), function(data) {
+        if (data.code == 1) {
+            alert(data.msg);
+            location.href = '{:url("admin/spider")}';
+        } else {
+            alert(data.msg);
+        }
+    });
+});
+</script>
+
+{include file="admin/layout/footer" /}

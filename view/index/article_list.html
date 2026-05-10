@@ -1,0 +1,85 @@
+{include file="layout/header" /}
+{include file="seo/article_list" /}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="article-list">
+                <h1 class="page-title">
+                    {if $category_name}
+                        {$category_name} - 文章列表
+                    {else}
+                        全部文章
+                    {/if}
+                </h1>
+                
+                <div class="articles-grid mt-4">
+                    {feifei:article_list cid="$category_id" limit="20" order="create_time desc"}
+                    <div class="article-item mb-4">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img src="{feifei:article name="thumbnail" /}" alt="{feifei:article name="title" /}" class="img-fluid rounded">
+                            </div>
+                            <div class="col-md-8">
+                                <h3><a href="{feifei:article_link id="$id" /}">{feifei:article name="title" /}</a></h3>
+                                <p class="text-muted">{feifei:article name="description" /}</p>
+                                <div class="article-meta">
+                                    <span class="text-muted">分类：{feifei:article name="category_name" /}</span>
+                                    <span class="text-muted ml-3">作者：{feifei:article name="author" /}</span>
+                                    <span class="text-muted ml-3">时间：{feifei:article name="create_time" /}</span>
+                                    <span class="text-muted ml-3">浏览：{feifei:article name="views" /}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {/feifei:article_list}
+                </div>
+                
+                <!-- 分页 -->
+                <div class="pagination mt-4">
+                    {feifei:article_pagination /}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <!-- 侧边栏 -->
+            <div class="sidebar">
+                <div class="widget mb-4">
+                    <h4>文章分类</h4>
+                    <ul class="list-unstyled">
+                        {feifei:article_category_list}
+                        <li class="mb-2">
+                            <a href="{feifei:article_category_link id="$id" /}">{feifei:category name="name" /}</a>
+                        </li>
+                        {/feifei:article_category_list}
+                    </ul>
+                </div>
+                
+                <div class="widget mb-4">
+                    <h4>热门文章</h4>
+                    <ul class="list-unstyled">
+                        {feifei:article_list limit="10" order="views desc"}
+                        <li class="mb-2">
+                            <a href="{feifei:article_link id="$id" /}">{feifei:article name="title" /}</a>
+                        </li>
+                        {/feifei:article_list}
+                    </ul>
+                </div>
+                
+                <div class="widget mb-4">
+                    <h4>最新文章</h4>
+                    <ul class="list-unstyled">
+                        {feifei:article_list limit="10" order="create_time desc"}
+                        <li class="mb-2">
+                            <a href="{feifei:article_link id="$id" /}">{feifei:article name="title" /}</a>
+                        </li>
+                        {/feifei:article_list}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{include file="layout/footer" /}

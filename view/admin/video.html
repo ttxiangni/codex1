@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>视频管理</title>
+</head>
+<body>
+    <h1>视频管理</h1>
+    <a href="/admin/video/add">添加视频</a>
+    <table border="1">
+        <tr>
+            <th>ID</th>
+            <th>标题</th>
+            <th>分类</th>
+            <th>状态</th>
+            <th>操作</th>
+        </tr>
+        {foreach $videos as $video}
+        <tr>
+            <td>{$video.id}</td>
+            <td>{$video.title}</td>
+            <td>{$video.category.name}</td>
+            <td>{$video.status}</td>
+            <td>
+                <a href="/admin/video/edit/{$video.id}">编辑</a>
+                <a href="/admin/video/delete/{$video.id}" onclick="return confirm('确定删除？')">删除</a>
+            </td>
+        </tr>
+        {/foreach}
+    </table>
+    {$videos->render()}
+</body>
+</html>

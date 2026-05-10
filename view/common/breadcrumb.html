@@ -1,0 +1,12 @@
+<!-- 面包屑导航组件 -->
+<nav aria-label="breadcrumb" class="mb-4">
+    <ol class="breadcrumb">
+        {foreach $breadcrumbs as $crumb}
+        {if $crumb@last}
+        <li class="breadcrumb-item active" aria-current="page">{$crumb.title}</li>
+        {else}
+        <li class="breadcrumb-item"><a href="{$crumb.url}">{$crumb.title}</a></li>
+        {/if}
+        {/foreach}
+    </ol>
+</nav>

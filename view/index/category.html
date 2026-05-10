@@ -1,0 +1,57 @@
+{include file="layout/header" title="{$category.name}" current_category=$category.id /}
+
+    <!-- 分类头部 -->
+    <section class="category-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1><i class="fas fa-tag me-3"></i>{$category.name}</h1>
+                    <p class="lead">发现更多精彩的{$category.name}内容</p>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="stats">
+                        <h3 class="mb-0">{$videos->total()}</h3>
+                        <small>部作品</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 视频列表 -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                {foreach $videos as $video}
+                {include file="common/video_card" /}
+                {/foreach}
+            </div>
+
+            {if $videos->isEmpty()}
+            {include file="common/empty_state" title="暂无{$category.name}内容" message="我们正在努力添加更多精彩内容" show_home_link=true /}
+            {/if}
+
+            <!-- 分页 -->
+            {if !$videos->isEmpty()}
+            <nav aria-label="视频分页" class="mt-4">
+                {$videos->render()}
+            </nav>
+            {/if}
+        </div>
+    </section>
+
+    <!-- 相关分类 -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <h3 class="mb-4 text-center">其他分类</h3>
+            <div class="row justify-content-center">
+                {foreach $categories as $cat}
+                {if $cat.id != $category.id}
+                {include file="common/category_card" category=$cat /}
+                {/if}
+                {/foreach}
+            </div>
+        </div>
+    </section>
+
+{include file="layout/footer" /}

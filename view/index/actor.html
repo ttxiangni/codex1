@@ -1,0 +1,82 @@
+{include file="layout/header" /}
+{include file="seo/actor" /}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="actor-profile">
+                <div class="row">
+                    <div class="col-md-4">
+                        <img src="{feifei:actor name="avatar" /}" alt="{feifei:actor name="name" /}" class="img-fluid rounded">
+                    </div>
+                    <div class="col-md-8">
+                        <h1 class="actor-name">{feifei:actor name="name" /}</h1>
+                        <p class="actor-info">
+                            <strong>英文名：</strong>{feifei:actor name="english_name" /}<br>
+                            <strong>性别：</strong>{feifei:actor name="gender" /}<br>
+                            <strong>生日：</strong>{feifei:actor name="birthday" /}<br>
+                            <strong>身高：</strong>{feifei:actor name="height" /}<br>
+                            <strong>体重：</strong>{feifei:actor name="weight" /}<br>
+                            <strong>星座：</strong>{feifei:actor name="constellation" /}<br>
+                            <strong>血型：</strong>{feifei:actor name="blood_type" /}<br>
+                            <strong>地区：</strong>{feifei:actor name="region" /}
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="actor-biography mt-4">
+                    <h3>演员简介</h3>
+                    <p>{feifei:actor name="biography" /}</p>
+                </div>
+                
+                <!-- 参演作品 -->
+                <div class="actor-videos mt-5">
+                    <h3>参演作品</h3>
+                    <div class="row">
+                        {feifei:actor_videos limit="12"}
+                        <div class="col-md-3 mb-3">
+                            <div class="card">
+                                <img src="{feifei:video name="pic" /}" class="card-img-top" alt="{feifei:video name="name" /}">
+                                <div class="card-body">
+                                    <h5 class="card-title"><a href="{feifei:video_link id="$id" /}">{feifei:video name="name" /}</a></h5>
+                                    <p class="card-text text-muted">{feifei:video name="actor" /}</p>
+                                    <small class="text-muted">{feifei:video name="year" /}</small>
+                                </div>
+                            </div>
+                        </div>
+                        {/feifei:actor_videos}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <!-- 侧边栏 -->
+            <div class="sidebar">
+                <div class="widget mb-4">
+                    <h4>热门演员</h4>
+                    <ul class="list-unstyled">
+                        {feifei:actor_list limit="10" order="views desc"}
+                        <li class="mb-2">
+                            <a href="{feifei:actor_link id="$id" /}">{feifei:actor name="name" /}</a>
+                        </li>
+                        {/feifei:actor_list}
+                    </ul>
+                </div>
+                
+                <div class="widget mb-4">
+                    <h4>演员地区</h4>
+                    <ul class="list-unstyled">
+                        {feifei:actor_region_list}
+                        <li class="mb-2">
+                            <a href="{feifei:actor_region_link region="$region" /}">{feifei:region name="region" /}</a>
+                        </li>
+                        {/feifei:actor_region_list}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{include file="layout/footer" /}

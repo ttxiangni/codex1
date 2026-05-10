@@ -1,0 +1,6 @@
+<!-- 热门标签组件 -->
+<div class="d-flex flex-wrap justify-content-center">
+    {foreach $tags as $tag}
+    <a href="/search?keyword={$tag.name}" class="btn btn-outline-primary me-2 mb-2">{$tag.name}</a>
+    {/foreach}
+</div>

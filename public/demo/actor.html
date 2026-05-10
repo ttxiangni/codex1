@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>演员详情页 - FeiFei CMS示意图</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { background-color: #f8f9fa; }
+        .navbar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .actor-header { background: white; padding: 40px 0; margin-bottom: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .actor-avatar { width: 200px; height: 200px; border-radius: 50%; object-fit: cover; border: 5px solid white; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .actor-info { background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .filmography { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-top: 30px; }
+        .movie-card { transition: transform 0.3s; cursor: pointer; }
+        .movie-card:hover { transform: translateY(-5px); }
+        .stats-card { text-align: center; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        .comment-section { background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-top: 30px; }
+    </style>
+</head>
+<body>
+
+<!-- 导航栏 -->
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">
+            <i class="fas fa-user-circle"></i> FeiFei CMS
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item"><a class="nav-link" href="index.html">首页</a></li>
+                <li class="nav-item"><a class="nav-link" href="video.html">电影</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">电视剧</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">综艺</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">动漫</a></li>
+                <li class="nav-item"><a class="nav-link" href="article.html">文章</a></li>
+                <li class="nav-item"><a class="nav-link active" href="#">演员</a></li>
+            </ul>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="#">登录</a></li>
+                <li class="nav-item"><a class="nav-link" href="#">注册</a></li>
+                <li class="nav-item">
+                    <button class="btn btn-outline-light btn-sm" id="themeToggle">
+                        <i class="fas fa-moon"></i> 夜间模式
+                    </button>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container my-4">
+
+    <!-- 面包屑导航 -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">首页</a></li>
+            <li class="breadcrumb-item"><a href="#">演员</a></li>
+            <li class="breadcrumb-item active" aria-current="page">演员姓名示例</li>
+        </ol>
+    </nav>
+
+    <!-- 演员头部信息 -->
+    <div class="actor-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-4 text-center">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48Y2lyY2xlIGN4PSIxMDAiIGN5PSIxMDAiIHI9IjEwMCIgZmlsbD0iI2RkZCIvPjx0ZXh0IHg9IjUwJSIgeT0iNTAlIiBmb250LXNpemU9IjIwIiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+5L2g5aWzPC90ZXh0Pjwvc3ZnPg==" alt="演员头像" class="actor-avatar">
+                </div>
+                <div class="col-md-8">
+                    <h1 class="display-4 mb-3">演员姓名示例</h1>
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>英文名：</strong>Actor Name</div>
+                        <div class="col-sm-3"><strong>性别：</strong>男</div>
+                        <div class="col-sm-3"><strong>出生日期：</strong>1990-01-01</div>
+                        <div class="col-sm-3"><strong>国籍：</strong>中国</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>身高：</strong>180cm</div>
+                        <div class="col-sm-3"><strong>体重：</strong>70kg</div>
+                        <div class="col-sm-3"><strong>星座：</strong>摩羯座</div>
+                        <div class="col-sm-3"><strong>血型：</strong>A型</div>
+                    </div>
+                    <div class="mb-3">
+                        <span class="badge bg-primary me-2">实力派演员</span>
+                        <span class="badge bg-success me-2">金像奖得主</span>
+                        <span class="badge bg-info me-2">热门演员</span>
+                        <span class="badge bg-warning me-2">90后</span>
+                    </div>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-danger">
+                            <i class="fas fa-heart"></i> 关注
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-share"></i> 分享
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- 主要内容 -->
+        <div class="col-lg-8">
+
+            <!-- 演员简介 -->
+            <div class="actor-info">
+                <h3 class="mb-4"><i class="fas fa-info-circle text-primary"></i> 演员简介</h3>
+                <p class="lead">演员姓名示例，中国内地男演员、导演。毕业于北京电影学院表演系。凭借多部影视作品获得广泛认可，曾获得金像奖最佳男主角等多个奖项。</p>
+
+                <h4 class="mt-4 mb-3">个人经历</h4>
+                <p>1990年出生于北京市，从小热爱表演艺术。中学时期就开始参加各种文艺活动，展现出出色的表演天赋。2008年考入北京电影学院表演系，在校期间就参与多部影视作品的拍摄。</p>
+
+                <p>2012年毕业后，正式进入演艺圈。凭借在首部电视剧中的出色表现，一炮而红。此后连续出演多部热门影视剧，积累了丰富的表演经验。</p>
+
+                <h4 class="mt-4 mb-3">演艺成就</h4>
+                <ul>
+                    <li>2015年：获得年度最佳新人奖</li>
+                    <li>2017年：凭借电影《电影A》获得金像奖最佳男主角提名</li>
+                    <li>2019年：主演电影《电影B》获得金像奖最佳男主角</li>
+                    <li>2021年：导演处女作《电影C》获得好评</li>
+                    <li>2023年：主演电视剧《电视剧A》创收视新高</li>
+                </ul>
+
+                <h4 class="mt-4 mb-3">个人生活</h4>
+                <p>演员非常注重个人隐私，生活低调。热爱阅读和旅行，经常在社交媒体分享生活感悟。近年来开始关注公益事业，积极参与各种慈善活动。</p>
+            </div>
+
+            <!-- 演员作品 -->
+            <div class="filmography">
+                <h3 class="mb-4"><i class="fas fa-film text-success"></i> 演员作品</h3>
+
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card movie-card h-100">
+                            <div class="card-img-container" style="height: 200px; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); display: flex; align-items: center; justify-content: center; color: white;">
+                                <i class="fas fa-film fa-3x"></i>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">电影作品A</h5>
+                                <p class="card-text">2023年上映，饰演：主人公</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">评分：9.2</small>
+                                    <span class="badge bg-primary">电影</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card movie-card h-100">
+                            <div class="card-img-container" style="height: 200px; background: linear-gradient(45deg, #a8e6cf, #ffd3a5); display: flex; align-items: center; justify-content: center; color: white;">
+                                <i class="fas fa-tv fa-3x"></i>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">电视剧作品A</h5>
+                                <p class="card-text">2023年播出，饰演：男主角</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">评分：8.9</small>
+                                    <span class="badge bg-success">电视剧</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card movie-card h-100">
+                            <div class="card-img-container" style="height: 200px; background: linear-gradient(45deg, #ffd1dc, #c8e6c9); display: flex; align-items: center; justify-content: center; color: white;">
+                                <i class="fas fa-film fa-3x"></i>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">电影作品B</h5>
+                                <p class="card-text">2022年上映，饰演：配角</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">评分：8.7</small>
+                                    <span class="badge bg-primary">电影</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card movie-card h-100">
+                            <div class="card-img-container" style="height: 200px; background: linear-gradient(45deg, #b8d4f0, #f0b8d4); display: flex; align-items: center; justify-content: center; color: white;">
+                                <i class="fas fa-tv fa-3x"></i>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">电视剧作品B</h5>
+                                <p class="card-text">2022年播出，饰演：男二号</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">评分：8.5</small>
+                                    <span class="badge bg-success">电视剧</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <button class="btn btn-outline-primary">查看更多作品</button>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 侧边栏 -->
+        <div class="col-lg-4">
+
+            <!-- 演员统计 -->
+            <div class="stats-card bg-primary text-white">
+                <h4 class="mb-3">关注统计</h4>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="h3 mb-1">125.6万</div>
+                        <small>粉丝数</small>
+                    </div>
+                    <div class="col-6">
+                        <div class="h3 mb-1">89</div>
+                        <small>作品数</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-card bg-success text-white">
+                <h4 class="mb-3">作品统计</h4>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="h3 mb-1">45</div>
+                        <small>电影</small>
+                    </div>
+                    <div class="col-6">
+                        <div class="h3 mb-1">44</div>
+                        <small>电视剧</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 热门标签 -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-tags text-warning"></i> 热门标签</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex flex-wrap gap-2">
+                        <span class="badge bg-primary">实力派</span>
+                        <span class="badge bg-success">金像奖</span>
+                        <span class="badge bg-info">导演</span>
+                        <span class="badge bg-warning">90后</span>
+                        <span class="badge bg-danger">偶像派</span>
+                        <span class="badge bg-secondary">文艺片</span>
+                        <span class="badge bg-dark">商业片</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 相关演员 -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-users text-info"></i> 相关演员</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-3">
+                        <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #667eea, #764ba2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin-right: 10px;">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <div><strong>合作演员A</strong></div>
+                            <small class="text-muted">共同出演5部作品</small>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center mb-3">
+                        <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #f093fb, #f5576c); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin-right: 10px;">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <div><strong>合作演员B</strong></div>
+                            <small class="text-muted">共同出演3部作品</small>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #4facfe, #00f2fe); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin-right: 10px;">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div>
+                            <div><strong>合作演员C</strong></div>
+                            <small class="text-muted">共同出演2部作品</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 最新动态 -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-bolt text-danger"></i> 最新动态</h5>
+                </div>
+                <div class="card-body">
+                    <div class="timeline-item mb-3 pb-3 border-bottom">
+                        <small class="text-muted d-block">2024-01-15</small>
+                        <p class="mb-0">新电影《电影D》正式开机</p>
+                    </div>
+                    <div class="timeline-item mb-3 pb-3 border-bottom">
+                        <small class="text-muted d-block">2024-01-10</small>
+                        <p class="mb-0">出席电影节活动</p>
+                    </div>
+                    <div class="timeline-item">
+                        <small class="text-muted d-block">2024-01-05</small>
+                        <p class="mb-0">发布新写真集</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 评论区 -->
+    <div class="comment-section">
+        <h4 class="mb-4"><i class="fas fa-comments text-info"></i> 评论区 (156条评论)</h4>
+
+        <!-- 发表评论 -->
+        <div class="mb-4">
+            <div class="d-flex align-items-start mb-3">
+                <div style="width: 40px; height: 40px; background: linear-gradient(45deg, #667eea, #764ba2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin-right: 10px;">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="flex-grow-1">
+                    <textarea class="form-control mb-2" rows="3" placeholder="写下你的评论..."></textarea>
+                    <button class="btn btn-primary">发表评论</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 评论列表 -->
+        <div class="comments-list">
+            <div class="comment-item mb-4 pb-3 border-bottom">
+                <div class="d-flex align-items-start">
+                    <div style="width: 40px; height: 40px; background: linear-gradient(45deg, #f093fb, #f5576c); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin-right: 10px;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <strong>影迷小李</strong>
+                            <small class="text-muted">2024-01-15 18:30</small>
+                        </div>
+                        <p class="mb-2">太喜欢这个演员了！演技真的很棒，每部作品都那么认真。期待新作品！</p>
+                        <div class="d-flex align-items-center">
+                            <button class="btn btn-sm btn-outline-primary me-2">
+                                <i class="fas fa-thumbs-up"></i> 赞 (28)
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-reply"></i> 回复
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comment-item mb-4 pb-3 border-bottom">
+                <div class="d-flex align-items-start">
+                    <div style="width: 40px; height: 40px; background: linear-gradient(45deg, #4facfe, #00f2fe); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; margin-right: 10px;">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="flex-grow-1">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <strong>电影爱好者</strong>
+                            <small class="text-muted">2024-01-15 17:45</small>
+                        </div>
+                        <p class="mb-2">从新人到现在的实力派，进步真的很大。每一部作品都有不同的突破。</p>
+                        <div class="d-flex align-items-center">
+                            <button class="btn btn-sm btn-outline-primary me-2">
+                                <i class="fas fa-thumbs-up"></i> 赞 (22)
+                            </button>
+                            <button class="btn btn-sm btn-outline-secondary">
+                                <i class="fas fa-reply"></i> 回复
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button class="btn btn-outline-primary">加载更多评论</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- 页脚 -->
+<footer class="bg-dark text-light py-4 mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <p class="mb-0">&copy; 2024 FeiFei CMS. All rights reserved.</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <a href="#" class="text-light me-3">隐私政策</a>
+                <a href="#" class="text-light me-3">服务条款</a>
+                <a href="#" class="text-light">站点地图</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // 夜间模式切换
+    document.getElementById('themeToggle').addEventListener('click', function() {
+        document.body.classList.toggle('dark-theme');
+        const icon = this.querySelector('i');
+
+        if (document.body.classList.contains('dark-theme')) {
+            icon.className = 'fas fa-sun';
+            this.innerHTML = '<i class="fas fa-sun"></i> 日间模式';
+        } else {
+            icon.className = 'fas fa-moon';
+            this.innerHTML = '<i class="fas fa-moon"></i> 夜间模式';
+        }
+    });
+</script>
+
+<style>
+    .dark-theme {
+        background-color: #1a1a1a !important;
+        color: #ffffff !important;
+    }
+    .dark-theme .navbar {
+        background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%) !important;
+    }
+    .dark-theme .card {
+        background-color: #2d3748 !important;
+        color: #ffffff !important;
+    }
+    .dark-theme .actor-header, .dark-theme .actor-info, .dark-theme .filmography, .dark-theme .comment-section {
+        background-color: #2d3748 !important;
+        color: #ffffff !important;
+    }
+    .dark-theme .text-muted {
+        color: #a0aec0 !important;
+    }
+    .dark-theme .bg-dark {
+        background-color: #1a202c !important;
+    }
+    .dark-theme .bg-primary {
+        background-color: #667eea !important;
+    }
+    .dark-theme .bg-success {
+        background-color: #48bb78 !important;
+    }
+</style>
+
+</body>
+</html>

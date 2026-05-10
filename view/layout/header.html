@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{$title ?? '影视网站'} - 影视网站</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 0;
+        }
+        .video-card {
+            transition: transform 0.3s;
+            height: 100%;
+        }
+        .video-card:hover {
+            transform: translateY(-5px);
+        }
+        .search-section {
+            background: #f8f9fa;
+            padding: 40px 0;
+        }
+        .category-nav {
+            background: white;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .video-player {
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .related-video-card {
+            transition: transform 0.3s;
+        }
+        .related-video-card:hover {
+            transform: translateY(-5px);
+        }
+        .comment-item {
+            border-bottom: 1px solid #dee2e6;
+            padding: 15px 0;
+        }
+        .comment-item:last-child {
+            border-bottom: none;
+        }
+        
+        /* 黑夜模式样式 */
+        body.dark-mode {
+            background-color: #1a1a1a;
+            color: #e4e4e4;
+        }
+        body.dark-mode .card {
+            background-color: #2a2a2a;
+            border-color: #333;
+        }
+        body.dark-mode .navbar {
+            background-color: #1a1a1a !important;
+            border-bottom: 1px solid #333;
+        }
+        body.dark-mode .form-control, 
+        body.dark-mode .form-select {
+            background-color: #2a2a2a;
+            border-color: #333;
+            color: #e4e4e4;
+        }
+        body.dark-mode .form-control:focus, 
+        body.dark-mode .form-select:focus {
+            background-color: #2a2a2a;
+            border-color: #666;
+            color: #e4e4e4;
+        }
+        body.dark-mode footer {
+            background-color: #1a1a1a;
+            border-top: 1px solid #333;
+        }
+        body.dark-mode .text-muted {
+            color: #999 !important;
+        }
+        body.dark-mode a {
+            color: #66a3ff;
+        }
+        body.dark-mode a:hover {
+            color: #99bbff;
+        }
+        body.dark-mode .btn-outline-light {
+            color: #e4e4e4;
+            border-color: #e4e4e4;
+        }
+        body.dark-mode .btn-outline-light:hover {
+            background-color: #e4e4e4;
+            color: #1a1a1a;
+        }
+        body.dark-mode .table {
+            color: #e4e4e4;
+            border-color: #333;
+        }
+        body.dark-mode .list-group-item {
+            background-color: #2a2a2a;
+            border-color: #333;
+            color: #e4e4e4;
+        }
+        body.dark-mode .list-group-item.active {
+            background-color: #0d6efd;
+            border-color: #0d6efd;
+        }
+        {$custom_css ?? ''}
+    </style>
+    {$extra_head ?? ''}
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-film me-2"></i>影视网站
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {if $current_page == 'index'}active{/if}" href="/">首页</a>
+                    </li>
+                    {foreach $categories ?? [] as $category}
+                    <li class="nav-item">
+                        <a class="nav-link {if isset($current_category) && $current_category == $category.id}active{/if}" href="{categoryUrl category=$category /}">{$category.name}</a>
+                    </li>
+                    {/foreach}
+                </ul>
+
+                <!-- 用户菜单 -->
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-1"></i>用户中心
+                            <span class="badge bg-danger ms-1" id="unreadBadge" style="display: none;">0</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/user"><i class="fas fa-tachometer-alt me-2"></i>用户中心</a></li>
+                            <li><a class="dropdown-item" href="/user/favorites"><i class="fas fa-heart me-2"></i>我的收藏</a></li>
+                            <li><a class="dropdown-item" href="/user/history"><i class="fas fa-history me-2"></i>观看历史</a></li>
+                            <li><a class="dropdown-item" href="/user/messages">
+                                <i class="fas fa-envelope me-2"></i>站内信
+                                <span class="badge bg-danger ms-2" id="messageBadge">0</span>
+                            </a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>退出登录</a></li>
+                        </ul>
+                    </li>
+                </ul>
+
+                <form class="d-flex ms-3" action="/search" method="get">
+                    <input class="form-control me-2" type="search" name="keyword" placeholder="搜索影视..." aria-label="Search" value="{$keyword ?? ''}">
+                    <button class="btn btn-outline-light" type="submit"><i class="fas fa-search"></i></button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 全局JavaScript -->
+    <script>
+        // 初始化黑夜模式
+        function initDarkMode() {
+            const theme = localStorage.getItem('app_theme') || 'light';
+            if (theme === 'dark') {
+                document.body.classList.add('dark-mode');
+            }
+        }
+
+        // 切换主题
+        function toggleTheme() {
+            const isDark = document.body.classList.toggle('dark-mode');
+            const theme = isDark ? 'dark' : 'light';
+            localStorage.setItem('app_theme', theme);
+
+            // 通知服务器
+            fetch('/api/setTheme', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ theme: theme })
+            }).catch(e => console.error('设置主题失败:', e));
+        }
+
+        // 获取未读消息数量
+        function updateUnreadCount() {
+            fetch('/api/getUnreadMessageCount/1') // 这里应该从用户会话获取用户ID
+                .then(response => response.json())
+                .then(data => {
+                    if (data.code === 0) {
+                        const count = data.data;
+                        const badge = document.getElementById('messageBadge');
+                        const navBadge = document.getElementById('unreadBadge');
+
+                        if (count > 0) {
+                            badge.textContent = count;
+                            badge.style.display = 'inline-block';
+                            navBadge.textContent = count;
+                            navBadge.style.display = 'inline-block';
+                        } else {
+                            badge.style.display = 'none';
+                            navBadge.style.display = 'none';
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('获取未读消息失败:', error);
+                });
+        }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            initDarkMode();
+            updateUnreadCount();
+            // 每30秒更新一次未读消息数量
+            setInterval(updateUnreadCount, 30000);
+        });
+    </script>
